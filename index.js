@@ -976,12 +976,9 @@ const keys = [
 console.log('hi');
 let lang = localStorage.getItem('lang');
 if (!lang) {
-  console.log('oh no');
   lang = 'eng';
 }
-window.addEventListener('beforeunload', () => localStorage.setItem('lang', lang) );
-
-console.log(lang);
+window.addEventListener('beforeunload', () => localStorage.setItem('lang', lang));
 
 const body = document.querySelector('body');
 body.insertAdjacentHTML('afterbegin', '<p>Операционная система: Windows</p>');
