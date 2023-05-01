@@ -207,7 +207,8 @@
       "shift": "Backspace",
       "caps": "Backspace",
       "shiftCaps": "Backspace"
-    }
+    },
+    "specialKey": true
   },
   {
     "key": "Tab",
@@ -222,7 +223,8 @@
       "shift": "Tab",
       "caps": "Tab",
       "shiftCaps": "Tab"
-    }
+    },
+    "specialKey": true
   },
   {
     "key": "KeyQ",
@@ -432,7 +434,8 @@
       "shift": "Del",
       "caps": "Del",
       "shiftCaps": "Del"
-    }
+    },
+    "specialKey": true
   },
   {
     "key": "CapsLock",
@@ -447,7 +450,8 @@
       "shift": "CapsLock",
       "caps": "CapsLock",
       "shiftCaps": "CapsLock"
-    }
+    },
+    "specialKey": true
   },
   {
     "key": "KeyA",
@@ -627,7 +631,8 @@
       "shift": "Enter",
       "caps": "Enter",
       "shiftCaps": "Enter"
-    }
+    },
+    "specialKey": true
   },
   {
     "key": "ShiftLeft",
@@ -642,7 +647,8 @@
       "shift": "Shift",
       "caps": "Shift",
       "shiftCaps": "Shift"
-    }
+    },
+    "specialKey": true
   },
   {
     "key": "KeyZ",
@@ -822,7 +828,8 @@
       "shift": "Shift",
       "caps": "Shift",
       "shiftCaps": "Shift"
-    }
+    },
+    "specialKey": true
   },
   {
     "key": "ControlLeft",
@@ -837,7 +844,8 @@
       "shift": "Ctrl",
       "caps": "Ctrl",
       "shiftCaps": "Ctrl"
-    }
+    },
+    "specialKey": true
   },
   {
     "key": "MetaLeft",
@@ -852,7 +860,8 @@
       "shift": "Win",
       "caps": "Win",
       "shiftCaps": "Win"
-    }
+    },
+    "specialKey": true
   },
   {
     "key": "AltLeft",
@@ -867,7 +876,8 @@
       "shift": "Alt",
       "caps": "Alt",
       "shiftCaps": "Alt"
-    }
+    },
+    "specialKey": true
   },
   {
     "key": "Space",
@@ -897,7 +907,8 @@
       "shift": "Alt",
       "caps": "Alt",
       "shiftCaps": "Alt"
-    }
+    },
+    "specialKey": true
   },
   {
     "key": "ArrowLeft",
@@ -957,6 +968,7 @@
       "shift": "Ctrl",
       "caps": "Ctrl",
       "shiftCaps": "Ctrl"
-    }
+    },
+    "specialKey": true
   }
 ]
