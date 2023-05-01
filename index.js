@@ -973,9 +973,8 @@ const keys = [
   },
 ];
 
-console.log('hi');
 let lang = localStorage.getItem('lang');
-if (!lang) {
+if (!lang || lang === 0 || lang === '0') {
   lang = 'eng';
 }
 window.addEventListener('beforeunload', () => localStorage.setItem('lang', lang));
@@ -1029,10 +1028,21 @@ class Key {
       textarea.focus();
       if (!this.specialKey) {
         this.changeText();
-      } else if (event.code === 'CapsLock' && !(event.shiftKey)) {
+      } else if (this.key === 'CapsLock' && !(event.shiftKey)) {
         currState = (currState === 'caps' ? 'lowerCase' : 'caps');
-      } else if (event.code === 'CapsLock') {
+        allKeys.forEach((x) => {
+          document.querySelector(`.${x.key}`).children[0].innerText = x[lang][currState];
+        });
+      } else if (this.key === 'CapsLock') {
         currState = 'shiftCaps';
+        allKeys.forEach((x) => {
+          document.querySelector(`.${x.key}`).children[0].innerText = x[lang][currState];
+        });
+      } else if (this.eng.lowerCase === 'Shift') {
+        currState = (currState === 'caps') ? 'shiftCaps' : 'shift';
+        allKeys.forEach((x) => {
+          document.querySelector(`.${x.key}`).children[0].innerText = x[lang][currState];
+        });
       }
       if (this.specialKey) {
         this.useSpecialKey();
@@ -1042,6 +1052,12 @@ class Key {
     this.elem.addEventListener('mouseup', () => {
       if (!(this.key === 'CapsLock') || currState === 'lowerCase' || currState === 'shift') {
         this.elem.classList.remove('active');
+      }
+      if (this.eng.lowerCase === 'Shift') {
+        currState = (currState === 'shiftCaps') ? 'caps' : 'lowerCase';
+        allKeys.forEach((x) => {
+          document.querySelector(`.${x.key}`).children[0].innerText = x[lang][currState];
+        });
       }
     });
 
