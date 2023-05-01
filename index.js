@@ -114,9 +114,9 @@ const keys = [
     },
     eng: {
       lowerCase: '7',
-      shift: '&amp;',
+      shift: '&',
       caps: '7',
-      shiftCaps: '&amp;',
+      shiftCaps: '&',
     },
   },
   {
@@ -765,9 +765,9 @@ const keys = [
     },
     eng: {
       lowerCase: ',',
-      shift: '&lt;',
+      shift: '<',
       caps: ',',
-      shiftCaps: '&lt;',
+      shiftCaps: '<',
     },
   },
   {
@@ -780,9 +780,9 @@ const keys = [
     },
     eng: {
       lowerCase: '.',
-      shift: '&gt;',
+      shift: '>',
       caps: '.',
-      shiftCaps: '&gt;',
+      shiftCaps: '>',
     },
   },
   {
@@ -973,6 +973,16 @@ const keys = [
   },
 ];
 
+console.log('hi');
+let lang = localStorage.getItem('lang');
+if (!lang) {
+  console.log('oh no');
+  lang = 'eng';
+}
+window.addEventListener('beforeunload', () => localStorage.setItem('lang', lang) );
+
+console.log(lang);
+
 const body = document.querySelector('body');
 body.insertAdjacentHTML('afterbegin', '<p>Операционная система: Windows</p>');
 body.insertAdjacentHTML('afterbegin', '<p>Комбинация для переключения языка: левыe ctrl + alt</p>');
@@ -982,7 +992,8 @@ body.insertAdjacentHTML('afterbegin', '<h1>RSS Virtual Keyboard</h1>');
 const keyboard = body.querySelector('.keyboard');
 const textarea = body.querySelector('.textarea');
 
-let lang = 'eng';
+const allKeys = [];
+let currState = 'lowerCase';
 
 class Key {
   constructor(obj) {
@@ -999,47 +1010,108 @@ class Key {
 
   createEvents() {
     body.addEventListener('keydown', (event) => {
-      this.curr = this[lang].lowerCase;
       if (event.code === this.key) {
         this.elem.classList.add('active');
         if (!this.specialKey) {
-          textarea.value += this.curr;
+          this.changeText();
+        } else {
+          this.useSpecialKey();
         }
       }
     });
 
     body.addEventListener('keyup', (event) => {
-      if (event.code === this.key) {
+      if (event.code === this.key && (!(event.code === 'CapsLock') || currState === 'lowerCase' || currState === 'shift')) {
         this.elem.classList.remove('active');
       }
     });
 
     this.elem.addEventListener('mousedown', (event) => {
-      const cursor = textarea.selectionEnd;
       this.elem.classList.add('active');
       event.preventDefault();
       textarea.focus();
       if (!this.specialKey) {
-        textarea.value += this.curr;
-        textarea.selectionEnd = cursor + 1;
+        this.changeText();
+      } else if (event.code === 'CapsLock' && !(event.shiftKey)) {
+        currState = (currState === 'caps' ? 'lowerCase' : 'caps');
+      } else if (event.code === 'CapsLock') {
+        currState = 'shiftCaps';
+      }
+      if (this.specialKey) {
+        this.useSpecialKey();
       }
     });
 
     this.elem.addEventListener('mouseup', () => {
-      this.elem.classList.remove('active');
+      if (!(this.key === 'CapsLock') || currState === 'lowerCase' || currState === 'shift') {
+        this.elem.classList.remove('active');
+      }
     });
 
     this.elem.addEventListener('mouseout', () => {
-      this.elem.classList.remove('active');
+      if (!(this.key === 'CapsLock')) {
+        this.elem.classList.remove('active');
+      }
     });
+  }
+
+  changeText(text = this[lang][currState], backspace = 0, del = 0) {
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const finText = textarea.value.substring(0, start - backspace)
+                    + text
+                    + textarea.value.substring(end + del);
+    textarea.value = finText;
+    textarea.selectionEnd = end + text.length - backspace;
+  }
+
+  useSpecialKey() {
+    if (this.key === 'Tab') {
+      this.changeText('    ');
+    } else if (this.key === 'Backspace') {
+      this.changeText('', 1);
+    } else if (this.key === 'Delete') {
+      this.changeText('', 0, 1);
+    } else if (this.key === 'Enter') {
+      this.changeText('\n');
+    }
   }
 }
 
-keys.forEach((x) => new Key(x));
+keys.forEach((x) => allKeys.push(new Key(x)));
 
 body.addEventListener('keydown', (event) => {
   event.preventDefault();
+  let somethingChanged = false;
+  if (event.shiftKey) {
+    if (currState === 'shiftCaps' && event.code !== 'CapsLock') {
+      currState = 'shiftCaps';
+    } else if (currState === 'shift' && event.code === 'CapsLock') {
+      currState = 'shiftCaps';
+    } else {
+      currState = (currState === 'caps') ? 'shiftCaps' : 'shift';
+    }
+    somethingChanged = true;
+  } else if (event.code === 'CapsLock') {
+    currState = (currState === 'caps' ? 'lowerCase' : 'caps');
+    somethingChanged = true;
+  }
   if (event.altKey && event.ctrlKey) {
     lang = (lang === 'rus' ? 'eng' : 'rus');
+    somethingChanged = true;
   }
+  if (somethingChanged) {
+    allKeys.forEach((x) => {
+      document.querySelector(`.${x.key}`).children[0].innerText = x[lang][currState];
+    });
+  }
+});
+
+body.addEventListener('keyup', (event) => {
+  if (event.key === 'Shift') {
+    currState = (currState === 'shiftCaps') ? 'caps' : 'lowerCase';
+  }
+  allKeys.forEach((x) => {
+    document.querySelector(`.${x.key}`).children[0].innerText = x[lang][currState];
+  });
 });
