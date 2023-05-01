@@ -975,7 +975,7 @@ const keys = [
 
 console.log('hi');
 let lang = localStorage.getItem('lang');
-if (!lang) {
+if (!lang || lang === 0 || lang === '0') {
   lang = 'eng';
 }
 window.addEventListener('beforeunload', () => localStorage.setItem('lang', lang));
